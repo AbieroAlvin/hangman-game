@@ -25,7 +25,7 @@ type State = {
 
 const GameContext = createContext<State | null>(null);
 
-const GameProvider = ({ children }: { children: ReactNode }) => {
+function GameProvider({ children }: { children: ReactNode }) {
   const [word, setWord] = useState("");
   const [incorrectGuess, setIncorrectGuess] = useState(0);
   const [chosenWords, setChosenWords] = useState<string[]>([]);
@@ -37,7 +37,7 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
 
   const navigate = useNavigate();
 
-  const handlePlayAgain = () => {
+  function handlePlayAgain() {
     const tempCategory = category;
     setCategory("loading...");
     setTimeout(() => {
@@ -47,17 +47,17 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
     setIncorrectGuess(0);
     setGuessedLetters([]);
     setGameStatus("playing");
-  };
+  }
 
-  const handleNewCategory = () => {
+  function handleNewCategory() {
     setWord("");
     setIncorrectGuess(0);
     setGuessedLetters([]);
     setGameStatus("playing");
     navigate("/game");
-  };
+  }
 
-  const handleQuitGame = () => {
+  function handleQuitGame() {
     setWord("");
     setIncorrectGuess(0);
     setGuessedLetters([]);
@@ -65,14 +65,14 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
     setCategory("");
 
     navigate("/");
-  };
+  }
 
   useEffect(() => {
     if (!category) return;
 
-    const fetchAndSelectWord = async () => {
+    async function fetchAndSelectWord() {
       const response = await fetch("../data.json");
-      const data = await response.json;
+      const data = await response.json();
       const categories = data.categories[category];
 
       const availableWords = categories.filter(
@@ -86,7 +86,7 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
         setWord(selectedWord.name);
         setChosenWords((prev) => [...prev, selectedWord.name]);
       }
-    };
+    }
 
     fetchAndSelectWord();
   }, [category]);
@@ -111,14 +111,15 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </GameContext.Provider>
   );
-};
+}
 
-const useGame = () => {
+function useGame() {
   const context = useContext(GameContext);
   if (!context) {
-    throw new Error("useGame must be used within GameProvider");
+    throw new Error("useGame must be used within a GameProvider");
   }
   return context;
-};
+}
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { GameProvider, useGame };

@@ -19,6 +19,15 @@ const GameKeyboard = ({
     String.fromCharCode(65 + index)
   );
 
+  const handleClick = (letter: string) => {
+    setGuessedLetters((prev: string[]) => [...prev, letter]);
+    const isWordCorrect = word.toUpperCase().includes(letter.toUpperCase());
+
+    if (!isWordCorrect) {
+      setIncorrectGuess(incorrectGuess + 1);
+    }
+  };
+
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       const letter = event.key.toUpperCase();
@@ -62,15 +71,6 @@ const GameKeyboard = ({
       }
     }
   }, [guessedLetters, word, incorrectGuess, setGameStatus, setIsModalOpen]);
-
-  const handleClick = (letter: string) => {
-    setGuessedLetters((prev: string[]) => [...prev, letter]);
-    const isWordCorrect = word.toUpperCase().includes(letter.toUpperCase());
-
-    if (!isWordCorrect) {
-      setIncorrectGuess(incorrectGuess + 1);
-    }
-  };
 
   return (
     <div className="flex flex-wrap gap-[2.4rem] mobile:gap-5">
